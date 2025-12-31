@@ -1,0 +1,251 @@
+{% extends "base.html" %}
+
+{% block title %}API Reference - ML Audit{% endblock %}
+
+{% block content %}
+<h1>API Reference</h1>
+<p class="intro">Detailed documentation for the <code>AuditTrialRecorder</code> class and its methods.</p>
+
+<!-- Initialization -->
+<div class="api-card">
+    <div class="api-header">
+        <span class="api-title">AuditTrialRecorder(df, name=None)</span>
+    </div>
+    <div class="api-body">
+        <p>Initialize the recorder with a pandas DataFrame.</p>
+        <div class="param-list">
+            <div class="param-item">
+                <span class="param-name">df (pd.DataFrame)</span>
+                <span class="param-desc">The initial dataframe to track.</span>
+            </div>
+            <div class="param-item">
+                <span class="param-name">name (str, optional)</span>
+                <span class="param-desc">Name of the experiment/audit trail. Defaults to a timestamped name.</span>
+            </div>
+        </div>
+        <h4>Example</h4>
+        <pre><code>from ml_audit import AuditTrialRecorder
+auditor = AuditTrialRecorder(df, name="my_experiment")</code></pre>
+    </div>
+</div>
+
+<!-- Impute -->
+<div class="api-card">
+    <div class="api-header">
+        <span class="api-title">.impute(column, strategy='mean', fill_value=None, method=None)</span>
+    </div>
+    <div class="api-body">
+        <p>Fill missing values in one or more columns using statistical strategies or specific methods.</p>
+        <div class="param-list">
+            <div class="param-item">
+                <span class="param-name">column (str | list)</span>
+                <span class="param-desc">Column name(s) to impute.</span>
+            </div>
+            <div class="param-item">
+                <span class="param-name">strategy (str)</span>
+                <span class="param-desc">'mean', 'median', 'mode', or 'constant'.</span>
+            </div>
+            <div class="param-item">
+                <span class="param-name">method (str)</span>
+                <span class="param-desc">'ffill' or 'bfill'. Overrides strategy if provided.</span>
+            </div>
+            <div class="param-item">
+                <span class="param-name">fill_value (any)</span>
+                <span class="param-desc">Value to use when strategy='constant'.</span>
+            </div>
+        </div>
+        <h4>Example</h4>
+        <pre><code>auditor.impute(["age", "salary"], strategy='median')
+auditor.impute("stock", method='ffill')</code></pre>
+    </div>
+</div>
+
+<!-- Scale -->
+<div class="api-card">
+    <div class="api-header">
+        <span class="api-title">.scale(column, method='standard')</span>
+    </div>
+    <div class="api-body">
+        <p>Scale numerical features to a specific range or distribution.</p>
+        <div class="param-list">
+            <div class="param-item">
+                <span class="param-name">column (str | list)</span>
+                <span class="param-desc">Column name(s) to scale.</span>
+            </div>
+            <div class="param-item">
+                <span class="param-name">method (str)</span>
+                <span class="param-desc">'standard' (default), 'minmax', 'robust', 'maxabs'.</span>
+            </div>
+        </div>
+        <h4>Example</h4>
+        <pre><code>auditor.scale(["height", "weight"], method='standard')</code></pre>
+    </div>
+</div>
+
+<!-- Encode -->
+<div class="api-card">
+    <div class="api-header">
+        <span class="api-title">.encode(column, method='onehot', target_col=None)</span>
+    </div>
+    <div class="api-body">
+        <p>Encode categorical features.</p>
+        <div class="param-list">
+            <div class="param-item">
+                <span class="param-name">column (str | list)</span>
+                <span class="param-desc">Column name(s) to encode.</span>
+            </div>
+            <div class="param-item">
+                <span class="param-name">method (str)</span>
+                <span class="param-desc">'onehot', 'label', or 'target'.</span>
+            </div>
+            <div class="param-item">
+                <span class="param-name">target_col (str)</span>
+                <span class="param-desc">Required only for 'target' encoding.</span>
+            </div>
+        </div>
+        <h4>Example</h4>
+        <pre><code>auditor.encode("color", method='onehot')
+auditor.encode("zip", method='target', target_col='price')</code></pre>
+    </div>
+</div>
+
+<!-- Transform -->
+<div class="api-card">
+    <div class="api-header">
+        <span class="api-title">.transform(column, func='log')</span>
+    </div>
+    <div class="api-body">
+        <p>Apply mathematical transformations to columns.</p>
+        <div class="param-list">
+            <div class="param-item">
+                <span class="param-name">column (str | list)</span>
+                <span class="param-desc">Column name(s) to transform.</span>
+            </div>
+            <div class="param-item">
+                <span class="param-name">func (str)</span>
+                <span class="param-desc">'log' (log1p), 'sqrt', 'cbrt', 'square'.</span>
+            </div>
+        </div>
+        <h4>Example</h4>
+        <pre><code>auditor.transform("income", func='log')</code></pre>
+    </div>
+</div>
+
+<!-- Binning -->
+<div class="api-card">
+    <div class="api-header">
+        <span class="api-title">.bin_numeric(column, bins=5, strategy='quantile', labels=None)</span>
+    </div>
+    <div class="api-body">
+        <p>Discretize continuous variables into bins.</p>
+        <div class="param-list">
+            <div class="param-item">
+                <span class="param-name">column (str | list)</span>
+                <span class="param-desc">Column name(s) to bin.</span>
+            </div>
+            <div class="param-item">
+                <span class="param-name">bins (int)</span>
+                <span class="param-desc">Number of bins to create.</span>
+            </div>
+            <div class="param-item">
+                <span class="param-name">strategy (str)</span>
+                <span class="param-desc">'quantile' (equal freq) or 'uniform' (equal width).</span>
+            </div>
+        </div>
+        <h4>Example</h4>
+        <pre><code>auditor.bin_numeric("age", bins=4, strategy='quantile')</code></pre>
+    </div>
+</div>
+
+<!-- Date Extraction -->
+<div class="api-card">
+    <div class="api-header">
+        <span class="api-title">.extract_date_features(column, features=['year', 'month', 'day'])</span>
+    </div>
+    <div class="api-body">
+        <p>Extract features from datetime columns.</p>
+        <div class="param-list">
+            <div class="param-item">
+                <span class="param-name">column (str | list)</span>
+                <span class="param-desc">The datetime column(s).</span>
+            </div>
+            <div class="param-item">
+                <span class="param-name">features (list)</span>
+                <span class="param-desc">List of features to extract: 'year', 'month', 'day', 'weekday', 'hour'.</span>
+            </div>
+        </div>
+        <h4>Example</h4>
+        <pre><code>auditor.extract_date_features("joined_at", features=['year', 'month'])</code></pre>
+    </div>
+</div>
+
+<!-- Balance -->
+<div class="api-card">
+    <div class="api-header">
+        <span class="api-title">.balance_classes(target, strategy='oversample', random_state=42)</span>
+    </div>
+    <div class="api-body">
+        <p>Balance class distribution in the target variable.</p>
+        <div class="param-list">
+            <div class="param-item">
+                <span class="param-name">target (str)</span>
+                <span class="param-desc">The target class column.</span>
+            </div>
+            <div class="param-item">
+                <span class="param-name">strategy (str)</span>
+                <span class="param-desc">'oversample', 'undersample', or 'smote' (requires imblearn).</span>
+            </div>
+        </div>
+        <h4>Example</h4>
+        <pre><code>auditor.balance_classes("churn", strategy='smote')</code></pre>
+    </div>
+</div>
+
+<!-- Filters & Drops -->
+<div class="api-card">
+    <div class="api-header">
+        <span class="api-title">.filter_rows / .drop_columns</span>
+    </div>
+    <div class="api-body">
+        <p>Basic dataframe manipulations.</p>
+        <pre><code># Filter: column, operator, value
+auditor.filter_rows("age", ">=", 18)
+
+# Drop: columns (list)
+auditor.drop_columns(["id", "tmp"])</code></pre>
+    </div>
+</div>
+
+<!-- Generic Tracking -->
+<div class="api-card">
+    <div class="api-header">
+        <span class="api-title">.track_pandas(method_name, *args, **kwargs)</span>
+    </div>
+    <div class="api-body">
+        <p>Track any arbitrary pandas method.</p>
+        <pre><code>auditor.track_pandas("dropna", subset=['col1'])</code></pre>
+    </div>
+</div>
+
+<!-- Export -->
+<div class="api-card">
+    <div class="api-header">
+        <span class="api-title">.export_audit_trail(filename=None, visualize=True)</span>
+    </div>
+    <div class="api-body">
+        <p>Save the audit log to a JSON file and optionally generate an HTML visualization.</p>
+        <div class="param-list">
+            <div class="param-item">
+                <span class="param-name">filename (str)</span>
+                <span class="param-desc">Output filename. Defaults to [name]_audit.json.</span>
+            </div>
+            <div class="param-item">
+                <span class="param-name">visualize (bool)</span>
+                <span class="param-desc">If True (default), generates a corresponding .html file in
+                    visualizations/.</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

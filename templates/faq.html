@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+
+{% block title %}FAQ & Troubleshooting - ML Audit{% endblock %}
+
+{% block content %}
+<h1>FAQ & Troubleshooting</h1>
+
+<h2>Common Issues</h2>
+
+<div class="api-card">
+    <div class="api-header">
+        <span class="api-title">ImportError: No module named 'imblearn'</span>
+    </div>
+    <div class="api-body">
+        <p><strong>Cause:</strong> You are trying to use <code>strategy='smote'</code> but <code>imbalanced-learn</code>
+            is not installed.</p>
+        <p><strong>Solution:</strong> Install the library with the extra dependency:</p>
+        <pre><code>pip install ml-audit[balance]
+# OR
+pip install imbalanced-learn</code></pre>
+    </div>
+</div>
+
+<div class="api-card">
+    <div class="api-header">
+        <span class="api-title">Where are my visualization files?</span>
+    </div>
+    <div class="api-body">
+        <p>By default, <code>ml-audit</code> organizes output into project folders:</p>
+        <ul>
+            <li>JSON logs go to <code>audit_trails/</code></li>
+            <li>HTML files go to <code>visualizations/</code></li>
+        </ul>
+        <p>If you prefer a custom location, you can pass an absolute path to <code>export_audit_trail</code>.</p>
+    </div>
+</div>
+
+<div class="api-card">
+    <div class="api-header">
+        <span class="api-title">Can I track custom pandas functions?</span>
+    </div>
+    <div class="api-body">
+        <p>Yes! Use the <code>track_pandas</code> method or the specific <code>GenericPandasOp</code> if you are
+            extending the class.</p>
+        <pre><code># Track a dropna operation
+auditor.track_pandas("dropna", subset=['col1'])</code></pre>
+    </div>
+</div>
+
+<h2>Performance Tips</h2>
+<ul>
+    <li>For very large datasets, consider disabling <code>verify_reproducibility()</code> in production loops as it
+        re-runs the entire pipeline.</li>
+    <li>Use list inputs (e.g. <code>impute(['a','b'])</code>) instead of calling impute twice for better readability and
+        slightly better performance.</li>
+</ul>
+
+{% endblock %}

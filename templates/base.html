@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}ML Audit Docs{% endblock %}</title>
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='ml_audit_favicon.png') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="/" class="brand">
+                <img src="{{ url_for('static', filename='ml_audit_logo.png') }}" class="logo-img" alt="ML Audit Logo">
+                <span>ML</span> Audit
+            </a>
+            <div class="nav-links">
+                <a href="/" class="nav-link {% if request.path == '/' %}active{% endif %}">Home</a>
+                <a href="/api" class="nav-link {% if request.path == '/api' %}active{% endif %}">API Reference</a>
+                <a href="/faq" class="nav-link {% if request.path == '/faq' %}active{% endif %}">Help & FAQ</a>
+                <a href="https://github.com/SHIVOGOJOHN/ml_audit" class="nav-link" target="_blank">GitHub</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="main-container">
+        {% block content %}{% endblock %}
+    </div>
+
+    <footer>
+        <div class="container">
+            <p>ml-audit library &copy; 2025. Released under MIT License.</p>
+        </div>
+    </footer>
+
+</body>
+
+</html>
