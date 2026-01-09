@@ -242,6 +242,7 @@ footer {
     .navbar {
         height: auto;
         padding: 10px 15px;
+        position: static;
     }
 
     .nav-container {
@@ -297,7 +298,8 @@ footer {
         font-size: 0.9em;
     }
 
-    th, td {
+    th,
+    td {
         padding: 6px 8px;
     }
 }
